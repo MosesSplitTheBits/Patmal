@@ -1,18 +1,19 @@
-package patmal.workshops.logic;
+package patmal.workshops.student.impl.logic;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.io.File;
 
 import patmal.workshops.api.logic.WorkshopSystem;
 import patmal.workshops.api.model.Instructor;
 import patmal.workshops.api.model.Student;
 import patmal.workshops.api.model.Team;
 import patmal.workshops.api.model.Workshop;
-import patmal.workshops.model.InstructorImpl;
-import patmal.workshops.model.StudentImpl;
-import patmal.workshops.model.TeamImpl;
-import patmal.workshops.model.WorkshopImpl;
+import patmal.workshops.student.impl.model.InstructorImpl;
+import patmal.workshops.student.impl.model.StudentImpl;
+import patmal.workshops.student.impl.model.TeamImpl;
+import patmal.workshops.student.impl.model.WorkshopImpl;
 
  public class WorkshopSystemImpl implements WorkshopSystem{
 
@@ -176,4 +177,18 @@ import patmal.workshops.model.WorkshopImpl;
         return new ArrayList<>(workshops.values());
     }
 
+     @Override
+     public void exportInstructorsDataToJson(File targetFileName) {
+         throw new UnsupportedOperationException("TODO");
+     }
+
+     @Override
+     public void exportStudentsDataToJson(File targetFileName) {
+         throw new UnsupportedOperationException("TODO");
+     }
+
+     @Override
+     public void exportTeamsDataToJson(File targetFileName) {
+         throw new UnsupportedOperationException("TODO");
+     }
     }
