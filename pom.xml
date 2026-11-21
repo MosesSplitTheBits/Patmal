@@ -22,6 +22,7 @@
         <commons-validator.version>1.10.0</commons-validator.version>
         <log4j.version>2.25.2</log4j.version>
         <jackson.version>2.20.0</jackson.version>
+        <maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
         <java.version>25</java.version>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -74,4 +75,15 @@
 
         </dependencies>
     </dependencyManagement>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>${maven-assembly-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

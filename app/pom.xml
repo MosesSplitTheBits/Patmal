@@ -17,7 +17,7 @@
             <groupId>patmal.workshops.student.impl</groupId>
             <artifactId>logic-impl</artifactId>
         </dependency>
-<!--        ONLY NEEDED IN RUNTIME!-->
+        <!--        ONLY NEEDED IN RUNTIME!-->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
@@ -25,4 +25,34 @@
         </dependency>
 
     </dependencies>
+    <build>
+        <finalName>workshop-cli</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <archive>
+                        <manifest>
+                            <mainClass>patmal.workshops.student.impl.app.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>uber-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+    </build>
 </project>
