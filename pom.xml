@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- who am I: children inherit groupId + version from here -->
+    <groupId>patmal.workshops.student.impl</groupId>
+    <artifactId>root</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>   <!-- builds no jar, only organizes -->
+
+    <!-- aggregator role: what to build -->
+    <modules>
+        <module>core</module>
+        <module>app</module>
+    </modules>
+
+    <!-- parent role: settings every child inherits -->
+    <properties>
+        <java.version>25</java.version>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>patmal.workshops.student.impl</groupId>
+                <artifactId>model-impl</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>patmal.workshops.student.impl</groupId>
+                <artifactId>logic-impl</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>
