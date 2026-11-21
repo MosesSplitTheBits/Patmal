@@ -1,16 +1,15 @@
 package patmal.workshops.student.impl.logic;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.*;
 import java.io.File;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import patmal.workshops.api.logic.WorkshopSystem;
-import patmal.workshops.api.model.Instructor;
-import patmal.workshops.api.model.Student;
-import patmal.workshops.api.model.Team;
-import patmal.workshops.api.model.Workshop;
+import patmal.workshops.api.model.*;
 import patmal.workshops.student.impl.model.InstructorImpl;
 import patmal.workshops.student.impl.model.StudentImpl;
 import patmal.workshops.student.impl.model.TeamImpl;
@@ -29,19 +28,110 @@ public class WorkshopSystemImpl implements WorkshopSystem {
     private Map<String, Instructor> instructors;
     private Map<Integer, Team> teams;
     private static final Logger log = LogManager.getLogger(WorkshopSystemImpl.class);
-
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     public WorkshopSystemImpl() {
-        this.workshops = new HashMap<>();
-        this.students = new HashMap<>();
-        this.instructors = new HashMap<>();
-        this.teams = new HashMap<>();
+//        LinkedHash to list in order of creation for JSON.
+        this.workshops = new LinkedHashMap<>();
+        this.students = new LinkedHashMap<>();
+        this.instructors = new LinkedHashMap<>();
+        this.teams = new LinkedHashMap<>();
     }
+
+    //    HERE START JACKSON NODES
+    // {id, name, email}
+    private static ObjectNode person(Person p) {
+        ObjectNode n = mapper.createObjectNode();
+        n.put("id", p.getId());
+        n.put("name", p.getName());
+        n.put("email", p.getEmail());
+        return n;
+    }
+
+    // {id, name, description}
+    private static ObjectNode workshopDetails(Workshop w) {
+        ObjectNode n = mapper.createObjectNode();
+        n.put("id", w.getId());
+        n.put("name", w.getName());
+        n.put("description", w.getDescription());
+        return n;
+    }
+
+    // {id, name, description, instructor: {...} or null}
+    private static ObjectNode workshopWithInstructor(Workshop w) {
+        ObjectNode n = workshopDetails(w);
+        if (w.getInstructor() == null) n.putNull("instructor");
+        else n.set("instructor", person(w.getInstructor()));
+        return n;
+    }
+
+    // writes the array to the file
+    private static void write(File file, ArrayNode tree) {
+        try {
+            mapper.writerWithDefaultPrettyPrinter().writeValue(file, tree);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+
+    @Override
+    public void exportInstructorsDataToJson(File targetFileName) {
+        ArrayNode out = mapper.createArrayNode();
+        for (Instructor i : instructors.values()) {
+            ObjectNode in = person(i);
+            ArrayNode ws = in.putArray("workshops");
+            for (Workshop w : i.getWorkshops()) {
+                ObjectNode wn = workshopDetails(w);
+                ArrayNode ts = wn.putArray("teams");
+                for (Team t : teams.values()) {
+                    if (t.getWorkshop() == null || !t.getWorkshop().getId().equals(w.getId())) continue;
+                    ObjectNode tn = ts.addObject();
+                    tn.put("id", t.getId());
+                    tn.put("name", t.getName());
+                    ArrayNode ss = tn.putArray("students");
+                    for (Student s : t.getStudents()) {
+                        ss.add(person(s));
+                    }
+                }
+                ws.add(wn);
+            }
+            out.add(in);
+        }
+        write(targetFileName, out);
+    }
+
+    @Override
+    public void exportStudentsDataToJson(File targetFileName) {
+        ArrayNode out = mapper.createArrayNode();
+        for (Student s : students.values()) {
+            ObjectNode sn = person(s);
+
+            Team team = ((StudentImpl)s).getTeam();
+
+            if (team == null) {
+                sn.putNull("team");
+            } else {
+                ObjectNode tn = sn.putObject("team");
+                tn.put("id", team.getId());
+                tn.put("name", team.getName());
+                ArrayNode ids = tn.putArray("studentIds");
+                for (Student mate : team.getStudents()) {
+                    ids.add(mate.getId());
+                }
+                tn.set("workshop", workshopWithInstructor(team.getWorkshop()));
+            }
+            out.add(sn);
+        }
+        write(targetFileName, out);
+    }
+
 
     //EMAIL CHECK
     private static boolean isValidEmail(String email) {
         return EmailValidator.getInstance().isValid(email);
     }
+
 
     @Override
     public void associateWorkshopWithInstructor(Instructor instructor, Workshop workshop) {
@@ -207,15 +297,6 @@ public class WorkshopSystemImpl implements WorkshopSystem {
         return new ArrayList<>(workshops.values());
     }
 
-    @Override
-    public void exportInstructorsDataToJson(File targetFileName) {
-        throw new UnsupportedOperationException("TODO");
-    }
-
-    @Override
-    public void exportStudentsDataToJson(File targetFileName) {
-        throw new UnsupportedOperationException("TODO");
-    }
 
     @Override
     public void exportTeamsDataToJson(File targetFileName) {

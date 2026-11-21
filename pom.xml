@@ -21,6 +21,7 @@
         <patmal.api.version>2.0</patmal.api.version>
         <commons-validator.version>1.10.0</commons-validator.version>
         <log4j.version>2.25.2</log4j.version>
+        <jackson.version>2.20.0</jackson.version>
         <java.version>25</java.version>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -62,6 +63,15 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!--            jackson-->
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${jackson.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 </project>
