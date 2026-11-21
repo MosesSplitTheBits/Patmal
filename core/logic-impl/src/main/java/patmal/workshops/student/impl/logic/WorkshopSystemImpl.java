@@ -14,6 +14,7 @@ import patmal.workshops.student.impl.model.InstructorImpl;
 import patmal.workshops.student.impl.model.StudentImpl;
 import patmal.workshops.student.impl.model.TeamImpl;
 import patmal.workshops.student.impl.model.WorkshopImpl;
+import org.apache.commons.validator.routines.EmailValidator;
 
  public class WorkshopSystemImpl implements WorkshopSystem{
 
@@ -32,6 +33,12 @@ import patmal.workshops.student.impl.model.WorkshopImpl;
         this.instructors = new HashMap<>();
         this.teams = new HashMap<>();
     }
+     //EMAIL CHECK
+     private static void requireValidEmail(String email) {
+         if (!EmailValidator.getInstance().isValid(email)) {
+             throw new IllegalArgumentException("Invalid email: " + email);
+         }
+     }
 
     @Override
     public void associateWorkshopWithInstructor(Instructor instructor, Workshop workshop) {
@@ -42,7 +49,8 @@ import patmal.workshops.student.impl.model.WorkshopImpl;
 
     @Override
     public Instructor createInstructor(String id, String name, String email) {
-    
+        requireValidEmail(email);
+
     if (instructors.containsKey(id)) {
             throw new IllegalArgumentException("Instructor ID already exists");
         }
@@ -53,6 +61,8 @@ import patmal.workshops.student.impl.model.WorkshopImpl;
 
     @Override
     public Student createStudent(String id, String name, String email) {
+        requireValidEmail(email);
+
         if(students.containsKey(id)){
             throw new IllegalArgumentException("Student ID already exists!");
         }

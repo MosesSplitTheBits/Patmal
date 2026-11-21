@@ -28,5 +28,10 @@
             <groupId>patmal.workshops</groupId>
             <artifactId>model</artifactId>
         </dependency>
+<!--      email validator  -->
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+        </dependency>
     </dependencies>
 </project>

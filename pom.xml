@@ -19,6 +19,7 @@
     <!-- parent role: settings every child inherits -->
     <properties>
         <patmal.api.version>2.0</patmal.api.version>
+        <commons-validator.version>1.10.0</commons-validator.version>
         <java.version>25</java.version>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -45,6 +46,12 @@
                 <groupId>patmal.workshops</groupId>
                 <artifactId>logic</artifactId>
                 <version>${patmal.api.version}</version>
+            </dependency>
+            <!--email validator-->
+            <dependency>
+                <groupId>commons-validator</groupId>
+                <artifactId>commons-validator</artifactId>
+                <version>${commons-validator.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
