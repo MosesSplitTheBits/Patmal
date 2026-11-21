@@ -3,3 +3,6 @@ out/
 *.iml
 .DS_Store
 target/
+instructors.json
+students.json
+teams.json

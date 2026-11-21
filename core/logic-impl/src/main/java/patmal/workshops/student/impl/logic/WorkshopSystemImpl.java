@@ -107,7 +107,7 @@ public class WorkshopSystemImpl implements WorkshopSystem {
         for (Student s : students.values()) {
             ObjectNode sn = person(s);
 
-            Team team = ((StudentImpl)s).getTeam();
+            Team team = ((StudentImpl) s).getTeam();
 
             if (team == null) {
                 sn.putNull("team");
@@ -122,6 +122,22 @@ public class WorkshopSystemImpl implements WorkshopSystem {
                 tn.set("workshop", workshopWithInstructor(team.getWorkshop()));
             }
             out.add(sn);
+        }
+        write(targetFileName, out);
+    }
+
+    @Override
+    public void exportTeamsDataToJson(File targetFileName) {
+        ArrayNode out = mapper.createArrayNode();
+        for (Team t : teams.values()) {
+            ObjectNode tn = out.addObject();
+            tn.put("id", t.getId());
+            tn.put("name", t.getName());
+            ArrayNode ss = tn.putArray("students");
+            for (Student s : t.getStudents()) {
+                ss.add(person(s));
+            }
+            tn.set("workshop", workshopWithInstructor(t.getWorkshop()));
         }
         write(targetFileName, out);
     }
@@ -298,8 +314,4 @@ public class WorkshopSystemImpl implements WorkshopSystem {
     }
 
 
-    @Override
-    public void exportTeamsDataToJson(File targetFileName) {
-        throw new UnsupportedOperationException("TODO");
-    }
 }

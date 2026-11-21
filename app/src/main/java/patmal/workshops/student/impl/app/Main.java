@@ -1,5 +1,6 @@
 package patmal.workshops.student.impl.app;
 
+import java.io.File;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -29,12 +30,17 @@ public class Main {
         system.createStudent("s3", "Free Student", "free@uni.ac.il");
         system.createTeam("Team A", java, List.of("s1", "s2"));
 
-        // try a bad email, to see the WARN line
-        try {
-            system.createStudent("s4", "Bad Email", "not-an-email");
-        } catch (IllegalArgumentException e) {
-            log.info("Bad email was rejected as expected");
-        }
+        // export to the current folder
+        File instructorsFile = new File("instructors.json");
+        File studentsFile = new File("students.json");
+        File teamsFile = new File("teams.json");
+
+        system.exportInstructorsDataToJson(instructorsFile);
+        log.info("Wrote {}", instructorsFile.getAbsolutePath());
+        system.exportStudentsDataToJson(studentsFile);
+        log.info("Wrote {}", studentsFile.getAbsolutePath());
+        system.exportTeamsDataToJson(teamsFile);
+        log.info("Wrote {}", teamsFile.getAbsolutePath());
 
         log.info("workshop-cli finished");
     }
